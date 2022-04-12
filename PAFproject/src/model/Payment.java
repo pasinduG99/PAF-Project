@@ -10,7 +10,7 @@ public class Payment {
 	try
 	{
 	Class.forName("com.mysql.jdbc.Driver");
-	//Provide the correct details: DBServer/DBName, username, password
+	
 	con = DriverManager.getConnection("jdbc:mysql://localhost:3306/paymentdb",
 			"root", "Casio123");
 	}
@@ -26,7 +26,7 @@ public class Payment {
 	Connection con = connect();
 	if (con == null)
 	{return "Error while connecting to the database for inserting."; }
-	// create a prepared statement
+	
 	String query = " insert into payments(`invoiceNo`,`name`,`nic`,`description`,`amount`)" 
 	+ " values (?, ?, ?, ?, ?)";
 	PreparedStatement preparedStmt = con.prepareStatement(query);
@@ -77,7 +77,7 @@ public class Payment {
 	String amount = Double.toString(rs.getDouble("amount"));
 	
 	// Add into the html table
-	output += "<tr><td>" + invoiceNo + "</td>";
+	
 	output += "<td>" + name + "</td>";
 	output += "<td>" + nic + "</td>";
 	output += "<td>" + description + "</td>";
