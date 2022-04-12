@@ -141,7 +141,7 @@ public class Payment {
 		// create a prepared statement
 		String query = "delete from items where invoiceNo=?";
 		PreparedStatement preparedStmt = con.prepareStatement(query);
-		// binding values
+		
 		preparedStmt.setInt(1, Integer.parseInt(invoiceNo));
 		// execute the statement
 		preparedStmt.execute();
