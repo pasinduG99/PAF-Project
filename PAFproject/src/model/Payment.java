@@ -18,7 +18,7 @@ public class Payment {
 	{e.printStackTrace();}
 	return con;
 	}
-	public String insertItem(String name, String nic, String description, String amount)
+	public String insertPayment(String name, String nic, String description, String amount)
 	{
 	String output = "";
 	try
@@ -27,7 +27,7 @@ public class Payment {
 	if (con == null)
 	{return "Error while connecting to the database for inserting."; }
 	// create a prepared statement
-	String query = " insert into payments(`invoiceNo`,`name`,`NIC`,`description`,`amount`)" 
+	String query = " insert into payments(`invoiceNo`,`name`,`nic`,`description`,`amount`)" 
 	+ " values (?, ?, ?, ?, ?)";
 	PreparedStatement preparedStmt = con.prepareStatement(query);
 	// binding values
@@ -72,14 +72,14 @@ public class Payment {
 	{
 	String invoiceNo = Integer.toString(rs.getInt("invoiceNo"));
 	String name = rs.getString("name");
-	String NIC = rs.getString("NIC");
+	String nic= rs.getString("nic");
 	String description = rs.getString("description");
 	String amount = Double.toString(rs.getDouble("amount"));
 	
 	// Add into the html table
 	output += "<tr><td>" + invoiceNo + "</td>";
 	output += "<td>" + name + "</td>";
-	output += "<td>" + NIC + "</td>";
+	output += "<td>" + nic + "</td>";
 	output += "<td>" + description + "</td>";
 	output += "<td>" + amount + "</td>";
 	// buttons
@@ -100,7 +100,7 @@ public class Payment {
 	}
 	return output;
 	}
-	public String updateItem(String invoiceNo ,String name, String nic, String description, String amount)
+	public String updatePayment(String invoiceNo ,String name, String nic, String description, String amount)
 	
 	{
 		String output = "";
