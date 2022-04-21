@@ -125,7 +125,7 @@ public class Payment {
 		}
 		catch (Exception e)
 		{
-		output = "Error while updating the item.";
+		output = "Error while updating the payment.";
 		System.err.println(e.getMessage());
 		}
 		return output;
