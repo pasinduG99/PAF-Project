@@ -2,8 +2,7 @@ package model;
 
 import java.sql.*;
 
-public class Payment {
-	
+public class BillGeneration {
 	private Connection connect()
 	{
 	Connection con = null;
@@ -11,14 +10,14 @@ public class Payment {
 	{
 	Class.forName("com.mysql.jdbc.Driver");
 	
-	con = DriverManager.getConnection("jdbc:mysql://localhost:3306/paymentdb",
+	con = DriverManager.getConnection("jdbc:mysql://localhost:3306/billdb",
 			"root", "Casio123");
 	}
 	catch (Exception e)
 	{e.printStackTrace();}
 	return con;
 	}
-	public String insertPayment(String name, String nic, String description, String amount)
+	public String insertBill(String name, String accno, String address, String unit, String amount )
 	{
 	String output = "";
 	try
@@ -27,15 +26,16 @@ public class Payment {
 	if (con == null)
 	{return "Error while connecting to the database for inserting."; }
 	
-	String query = " insert into payments(`invoiceNo`,`name`,`nic`,`description`,`amount`)" 
-	+ " values (?, ?, ?, ?, ?)";
+	String query = " insert into payments(`billno`,`username`,`ano`,`address`,`units`,`amount`)" 
+	+ " values (?, ?, ?, ?, ?,?)";
 	PreparedStatement preparedStmt = con.prepareStatement(query);
 	// binding values
 	preparedStmt.setInt(1, 0);
 	preparedStmt.setString(2, name);
-	preparedStmt.setString(3, nic);
-	preparedStmt.setString(4, description);
-	preparedStmt.setDouble(5, Double.parseDouble(amount));
+	preparedStmt.setString(3, accno);
+	preparedStmt.setString(4, address);
+	preparedStmt.setInt(5, Integer.parseInt (unit));
+	preparedStmt.setDouble(6, Double.parseDouble(amount));
 	
 	
 	// execute the statement
@@ -46,12 +46,12 @@ public class Payment {
 	}
 	catch (Exception e)
 	{
-	output = "Error while inserting the payment.";
+	output = "Error while generating the bill.";
 	System.err.println(e.getMessage());
 	}
 	return output;
 	}
-	public String readPayments()
+	public String readBills()
 	{
 	String output = "";
 	try
@@ -61,32 +61,37 @@ public class Payment {
 	{return "Error while connecting to the database for reading."; }
 	// Prepare the html table to be displayed
 	output = "<table border='1'><tr><th>Name</th><th>NIC</th>" +
-	"<th>Description</th>" +
-	"<th>Amount</th>" +
+	"<th>AccountNO</th>" +
+	"<th>Address</th>" +
+	"<th>Units Consumed</th>" +
+	"<th>Amount </th>" +
 	"<th>Update</th><th>Remove</th></tr>";
-	String query = "select * from payments";
+	String query = "select * from bills";
 	Statement stmt = con.createStatement();
 	ResultSet rs = stmt.executeQuery(query);
 	// iterate through the rows in the result set
 	while (rs.next())
 	{
-	String invoiceNo = Integer.toString(rs.getInt("invoiceNo"));
-	String name = rs.getString("name");
-	String nic= rs.getString("nic");
-	String description = rs.getString("description");
+	String billno = Integer.toString(rs.getInt("billno"));
+	String username = rs.getString("username");
+	String ano= rs.getString("ano");
+	String address = rs.getString("address");
+	String unit = Integer.toString(rs.getInt("unit"));
 	String amount = Double.toString(rs.getDouble("amount"));
 	
 	// Add into the html table
 	
-	output += "<td>" + name + "</td>";
-	output += "<td>" + nic + "</td>";
-	output += "<td>" + description + "</td>";
+	output += "<td>" + username + "</td>";
+	output += "<td>" + ano + "</td>";
+	output += "<td>" + address + "</td>";
+	output += "<td>" + unit + "</td>";
 	output += "<td>" + amount + "</td>";
+	
 	// buttons
 	output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"
-	+ "<td><form method='post' action='payment.jsp'>"
+	+ "<td><form method='post' action='items.jsp'>"
 	+ "<input name='btnRemove' type='submit' value='Remove' class='btn btn-danger'>"
-	+ "<input name='invoiceNo' type='hidden' value='" + invoiceNo
+	+ "<input name='invoiceNo' type='hidden' value='" + billno
 	+ "'>" + "</form></td></tr>";
 	}
 	con.close();
@@ -100,7 +105,7 @@ public class Payment {
 	}
 	return output;
 	}
-	public String updatePayment(String invoiceNo ,String name, String nic, String description, String amount)
+	public String updateBill(String billno , String name , String accno, String address, String unit, String amount)
 	
 	{
 		String output = "";
@@ -110,14 +115,15 @@ public class Payment {
 		if (con == null)
 		{return "Error while connecting to the database for updating."; }
 		// create a prepared statement
-		String query = "UPDATE payments SET name=?,NIC=?,description=?,amount=? WHERE invoiceNo=?";
+		String query = "UPDATE bills SET username=?,ano=?,address=?,units=?,amount=? WHERE billno=?";
 		PreparedStatement preparedStmt = con.prepareStatement(query);
 		// binding values
 		preparedStmt.setString(1, name);
-		preparedStmt.setString(2, nic);
-		preparedStmt.setString(3, description);
-		preparedStmt.setDouble(4, Double.parseDouble(amount));
-		preparedStmt.setInt(5, Integer.parseInt(invoiceNo));
+		preparedStmt.setString(2, accno);
+		preparedStmt.setString(3, address);
+		preparedStmt.setInt(4, Integer.parseInt(unit)) ;
+		preparedStmt.setDouble(5, Double.parseDouble(amount));
+		preparedStmt.setInt(6, Integer.parseInt(billno));
 		// execute the statement
 		preparedStmt.execute();
 		con.close();
@@ -125,12 +131,12 @@ public class Payment {
 		}
 		catch (Exception e)
 		{
-		output = "Error while updating the item.";
+		output = "Error while updating the bill.";
 		System.err.println(e.getMessage());
 		}
 		return output;
 		}
-		public String deletePayment(String invoiceNo)
+		public String deletePayment(String billno)
 		{
 		String output = "";
 		try
@@ -142,7 +148,7 @@ public class Payment {
 		String query = "delete from items where invoiceNo=?";
 		PreparedStatement preparedStmt = con.prepareStatement(query);
 		
-		preparedStmt.setInt(1, Integer.parseInt(invoiceNo));
+		preparedStmt.setInt(1, Integer.parseInt(billno));
 		// execute the statement
 		preparedStmt.execute();
 		con.close();
@@ -155,5 +161,5 @@ public class Payment {
 		}
 		return output;
 		}
-		
+
 }
