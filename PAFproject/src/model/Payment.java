@@ -110,7 +110,7 @@ public class Payment {
 		if (con == null)
 		{return "Error while connecting to the database for updating."; }
 		// create a prepared statement
-		String query = "UPDATE payments SET name=?,NIC=?,description=?,amount=? WHERE invoiceNo=?";
+		String query = "UPDATE payments SET name=?,nic=?,description=?,amount=? WHERE invoiceNo=?";
 		PreparedStatement preparedStmt = con.prepareStatement(query);
 		// binding values
 		preparedStmt.setString(1, name);
@@ -139,7 +139,7 @@ public class Payment {
 		if (con == null)
 		{return "Error while connecting to the database for deleting."; }
 		// create a prepared statement
-		String query = "delete from items where invoiceNo=?";
+		String query = "delete from payments where invoiceNo=?";
 		PreparedStatement preparedStmt = con.prepareStatement(query);
 		
 		preparedStmt.setInt(1, Integer.parseInt(invoiceNo));
