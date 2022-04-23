@@ -17,7 +17,7 @@ public class BillGeneration {
 	{e.printStackTrace();}
 	return con;
 	}
-	public String insertBill(String name, String accno, String address, String unit, String amount )
+	public String insertBill(String name, String accno, String address, String units, String amount )
 	{
 	String output = "";
 	try
@@ -26,7 +26,7 @@ public class BillGeneration {
 	if (con == null)
 	{return "Error while connecting to the database for inserting."; }
 	
-	String query = " insert into payments(`billno`,`username`,`ano`,`address`,`units`,`amount`)" 
+	String query = " insert into bills(`billno`,`username`,`ano`,`address`,`units`,`amount`)" 
 	+ " values (?, ?, ?, ?, ?,?)";
 	PreparedStatement preparedStmt = con.prepareStatement(query);
 	// binding values
@@ -34,7 +34,7 @@ public class BillGeneration {
 	preparedStmt.setString(2, name);
 	preparedStmt.setString(3, accno);
 	preparedStmt.setString(4, address);
-	preparedStmt.setInt(5, Integer.parseInt (unit));
+	preparedStmt.setInt(5, Integer.parseInt (units));
 	preparedStmt.setDouble(6, Double.parseDouble(amount));
 	
 	
@@ -60,11 +60,10 @@ public class BillGeneration {
 	if (con == null)
 	{return "Error while connecting to the database for reading."; }
 	// Prepare the html table to be displayed
-	output = "<table border='1'><tr><th>Name</th><th>NIC</th>" +
-	"<th>AccountNO</th>" +
+	output = "<table border='1'><tr><th>Name</th><th>AccountNO</th>" +
 	"<th>Address</th>" +
 	"<th>Units Consumed</th>" +
-	"<th>Amount </th>" +
+	"<th>Amount</th>" +
 	"<th>Update</th><th>Remove</th></tr>";
 	String query = "select * from bills";
 	Statement stmt = con.createStatement();
@@ -76,7 +75,7 @@ public class BillGeneration {
 	String username = rs.getString("username");
 	String ano= rs.getString("ano");
 	String address = rs.getString("address");
-	String unit = Integer.toString(rs.getInt("unit"));
+	String units = Integer.toString(rs.getInt("units"));
 	String amount = Double.toString(rs.getDouble("amount"));
 	
 	// Add into the html table
@@ -84,14 +83,14 @@ public class BillGeneration {
 	output += "<td>" + username + "</td>";
 	output += "<td>" + ano + "</td>";
 	output += "<td>" + address + "</td>";
-	output += "<td>" + unit + "</td>";
+	output += "<td>" + units + "</td>";
 	output += "<td>" + amount + "</td>";
 	
 	// buttons
 	output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"
-	+ "<td><form method='post' action='items.jsp'>"
+	+ "<td><form method='post' action='bill.jsp'>"
 	+ "<input name='btnRemove' type='submit' value='Remove' class='btn btn-danger'>"
-	+ "<input name='invoiceNo' type='hidden' value='" + billno
+	+ "<input name='billno' type='hidden' value='" + billno
 	+ "'>" + "</form></td></tr>";
 	}
 	con.close();
@@ -100,12 +99,12 @@ public class BillGeneration {
 	}
 	catch (Exception e)
 	{
-	output = "Error while reading the payments.";
+	output = "Error while reading the bills.";
 	System.err.println(e.getMessage());
 	}
 	return output;
 	}
-	public String updateBill(String billno , String name , String accno, String address, String unit, String amount)
+	public String updateBill(String billno , String name , String accno, String address, String units, String amount)
 	
 	{
 		String output = "";
@@ -121,7 +120,7 @@ public class BillGeneration {
 		preparedStmt.setString(1, name);
 		preparedStmt.setString(2, accno);
 		preparedStmt.setString(3, address);
-		preparedStmt.setInt(4, Integer.parseInt(unit)) ;
+		preparedStmt.setInt(4, Integer.parseInt(units)) ;
 		preparedStmt.setDouble(5, Double.parseDouble(amount));
 		preparedStmt.setInt(6, Integer.parseInt(billno));
 		// execute the statement
@@ -136,7 +135,7 @@ public class BillGeneration {
 		}
 		return output;
 		}
-		public String deletePayment(String billno)
+		public String deleteBill(String billno)
 		{
 		String output = "";
 		try
@@ -145,7 +144,7 @@ public class BillGeneration {
 		if (con == null)
 		{return "Error while connecting to the database for deleting."; }
 		// create a prepared statement
-		String query = "delete from items where invoiceNo=?";
+		String query = "delete from bills where billno=?";
 		PreparedStatement preparedStmt = con.prepareStatement(query);
 		
 		preparedStmt.setInt(1, Integer.parseInt(billno));

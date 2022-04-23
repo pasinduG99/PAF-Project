@@ -63,13 +63,13 @@ public class BillGenerationService {
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String deletePayment(String paymentData)
+	public String deletePayment(String billData)
 	{
 	//Convert the input string to an XML document
-	Document doc = Jsoup.parse(paymentData, "", Parser.xmlParser());
-	//Read the value from the element <invoiceNo>
-	String invoiceNo = doc.select("invoiceNo").text();
-	String output = bill.deletePayment(invoiceNo);
+	Document doc = Jsoup.parse(billData, "", Parser.xmlParser());
+	//Read the value from the element <billno>
+	String billno = doc.select("billno").text();
+	String output = bill.deleteBill(billno);
 	return output;
 	}
 
