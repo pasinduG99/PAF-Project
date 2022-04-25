@@ -21,7 +21,7 @@ public class BillGenerationService {
 	@GET
 	@Path("/")
 	@Produces(MediaType.TEXT_HTML)
-	public String readPayments()
+	public String readBills()
 	{
 	return bill.readBills();
 	}
@@ -30,7 +30,7 @@ public class BillGenerationService {
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String insertPayment(@FormParam("username") String username,
+	public String insertBill(@FormParam("username") String username,
 	@FormParam("ano") String ano,
 	@FormParam("address") String address,
 	@FormParam("units") String units,
@@ -44,17 +44,17 @@ public class BillGenerationService {
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String updatePayment(String billData)
+	public String updateBill(String billData)
 	{
 	//Convert the input string to a JSON object
-	JsonObject payObject = new JsonParser().parse(billData).getAsJsonObject();
+	JsonObject billObject = new JsonParser().parse(billData).getAsJsonObject();
 	//Read the values from the JSON object
-	String billno = payObject.get("billno").getAsString();
-	String username = payObject.get("username").getAsString();
-	String ano = payObject.get("ano").getAsString();
-	String address = payObject.get("address").getAsString();
-	String units = payObject.get("units").getAsString();
-	String amount = payObject.get("amount").getAsString();
+	String billno = billObject.get("billno").getAsString();
+	String username = billObject.get("username").getAsString();
+	String ano = billObject.get("ano").getAsString();
+	String address = billObject.get("address").getAsString();
+	String units = billObject.get("units").getAsString();
+	String amount = billObject.get("amount").getAsString();
 	String output = bill.updateBill(billno, username, ano, address, units,  amount);
 	return output;
 	}

@@ -104,7 +104,7 @@ public class BillGeneration {
 	}
 	return output;
 	}
-	public String updateBill(String billno , String name , String accno, String address, String units, String amount)
+	public String updateBill(String billno , String name , String ano, String address, String units, String amount)
 	
 	{
 		String output = "";
@@ -118,7 +118,7 @@ public class BillGeneration {
 		PreparedStatement preparedStmt = con.prepareStatement(query);
 		// binding values
 		preparedStmt.setString(1, name);
-		preparedStmt.setString(2, accno);
+		preparedStmt.setString(2, ano);
 		preparedStmt.setString(3, address);
 		preparedStmt.setInt(4, Integer.parseInt(units)) ;
 		preparedStmt.setDouble(5, Double.parseDouble(amount));
